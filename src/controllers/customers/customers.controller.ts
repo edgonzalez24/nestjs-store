@@ -9,42 +9,44 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
+import { CreateCustomerDto, UpdateCustomerDto } from 'src/dtos/customers.dtos';
+import { CustomersService } from 'src/services/customers/customers.service';
 
 @Controller('customers')
 export class CustomersController {
+  constructor(private CustomerService: CustomersService) {}
+
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() payload: any) {
-    return {
-      message: 'created',
-      data: payload,
-    };
+  create(@Body() payload: CreateCustomerDto) {
+    return this.CustomerService.create(payload);
   }
 
   @Get()
   @HttpCode(HttpStatus.ACCEPTED)
-  find(): string {
-    return 'all customers';
+  find() {
+    return this.CustomerService.findAll();
   }
 
-  findOne() {}
+  @Get('/:id')
+  @HttpCode(HttpStatus.ACCEPTED)
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.CustomerService.findOne(id);
+  }
 
   @Put('/:id')
   @HttpCode(HttpStatus.ACCEPTED)
-  update(@Param('id') id: string, @Body() payload: any) {
-    return {
-      message: 'Updated',
-      id,
-      payload,
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateCustomerDto,
+  ) {
+    return this.CustomerService.update(id, payload);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.ACCEPTED)
-  delete(@Param('id') id: string) {
-    return {
-      message: 'Deleted',
-      id,
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.CustomerService.remove(id);
   }
 }

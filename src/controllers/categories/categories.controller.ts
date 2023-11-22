@@ -9,43 +9,43 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
+import { CreateCategoryDto, UpdateCategoryDto } from 'src/dtos/categories.dtos';
+import { CategoriesService } from 'src/services/categories/categories.service';
 
 @Controller('categories')
 export class CategoriesController {
-  @Get('/:category/products/:product')
+  constructor(private CategoryService: CategoriesService) {}
+  @Get('/')
   @HttpCode(HttpStatus.ACCEPTED)
-  findOne(
-    @Param('category') category: string,
-    @Param('product') product: string,
-  ): string {
-    return `Product ${product} and category ${category}`;
+  find() {
+    return this.CategoryService.findAll();
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.ACCEPTED)
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.CategoryService.findOne(id);
   }
 
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() payload: any) {
-    return {
-      message: 'created',
-      data: payload,
-    };
+  create(@Body() payload: CreateCategoryDto) {
+    return this.CategoryService.create(payload);
   }
 
   @Put('/:id')
   @HttpCode(HttpStatus.ACCEPTED)
-  update(@Param('id') id: string, @Body() payload: any) {
-    return {
-      message: 'Updated',
-      id,
-      payload,
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateCategoryDto,
+  ) {
+    return this.CategoryService.update(id, payload);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.ACCEPTED)
-  delete(@Param('id') id: string) {
-    return {
-      message: 'Deleted',
-      id,
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.CategoryService.remove(id);
   }
 }
