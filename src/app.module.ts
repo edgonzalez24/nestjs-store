@@ -13,9 +13,11 @@ import { OrdersService } from './services/orders/orders.service';
 import { UsersService } from './services/users/users.service';
 import { CategoriesService } from './services/categories/categories.service';
 import { BrandsService } from './services/brands/brands.service';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [
     AppController,
     ProductsController,
@@ -33,6 +35,23 @@ import { BrandsService } from './services/brands/brands.service';
     UsersService,
     CategoriesService,
     BrandsService,
+    {
+      provide: 'API_EXAMPLE',
+      useValue: '123456',
+    },
+    {
+      provide: 'API_TASKS',
+      useFactory: async (httpService: HttpService) => {
+        try {
+          const tasks = await httpService.get(
+            'https://jsonplaceholder.typicode.com/todos',
+          );
+          const data = await (await firstValueFrom(tasks)).data;
+          return data;
+        } catch (error) {}
+      },
+      inject: [HttpService],
+    },
   ],
 })
 export class AppModule {}
