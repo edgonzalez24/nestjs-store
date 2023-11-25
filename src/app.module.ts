@@ -15,9 +15,10 @@ import { CategoriesService } from './services/categories/categories.service';
 import { BrandsService } from './services/brands/brands.service';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, DatabaseModule],
   controllers: [
     AppController,
     ProductsController,
@@ -35,10 +36,6 @@ import { firstValueFrom } from 'rxjs';
     UsersService,
     CategoriesService,
     BrandsService,
-    {
-      provide: 'API_EXAMPLE',
-      useValue: '123456',
-    },
     {
       provide: 'API_TASKS',
       useFactory: async (httpService: HttpService) => {
