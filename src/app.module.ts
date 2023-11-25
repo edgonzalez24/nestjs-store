@@ -16,9 +16,17 @@ import { BrandsService } from './services/brands/brands.service';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { DatabaseModule } from './modules/database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule, DatabaseModule],
+  imports: [
+    HttpModule,
+    DatabaseModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+  ],
   controllers: [
     AppController,
     ProductsController,
