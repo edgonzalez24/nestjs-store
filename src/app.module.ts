@@ -17,14 +17,17 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { DatabaseModule } from './modules/database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { enviroments } from 'src/enviroments';
+import config from './config';
 
 @Module({
   imports: [
     HttpModule,
     DatabaseModule,
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       isGlobal: true,
+      load: [config],
     }),
   ],
   controllers: [
