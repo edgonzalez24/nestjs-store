@@ -10,10 +10,11 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-
+import { ApiTags } from '@nestjs/swagger';
 import { BrandsService } from 'src/services/brands/brands.service';
 import { CreateBrandDto, UpdateBrandDto } from 'src/dtos/brands.dtos';
 
+@ApiTags('brands')
 @Controller('brands')
 export class BrandsController {
   constructor(private brandsService: BrandsService) {}
