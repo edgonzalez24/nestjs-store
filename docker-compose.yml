@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  postgres-store:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=${PG_DB_NAME}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-store
